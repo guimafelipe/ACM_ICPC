@@ -26,7 +26,7 @@ typedef vector<ll> vll;
 
 #define MAX_N 100010
 
-char T[MAX_N]; //Input string
+char T[MAX_N], T2[MAX_N]; //Input string
 int n; // Length of input string
 int RA[MAX_N], tempRA[MAX_N]; // rank array and temporary rank array
 int SA[MAX_N], tempSA[MAX_N]; // suffix array and temporary suffix array
@@ -66,11 +66,45 @@ void constructSA(){
 	}
 }
 
+int Phi[MAX_N], PLCP[MAX_N], LCP[MAX_N];
+
+void computeLCP(){ //longest commom prefix in suffix array
+	int i, L;
+	Phi[SA[0]] = -1;
+	for(i = 1; i < n; i++)
+		Phi[SA[i]] = SA[i-1];
+	for(i = L = 0; i < n; i++){
+		if(Phi[i] == -1){
+			PLCP[i] = 0; continue;
+		}
+		while(T[i+L] == T[Phi[i]+L]) L++; //comput PLCP using theroem
+		PLCP[i] = L;
+		L = max(L-1, 0);
+	}
+	for(i = 0; i < n; i++) //Put in correct position
+		LCP[i] = PLCP[SA[i]]; //look at max value of this array
+		// the max value is the length of the longest repeated substring
+		// get the highest value position and here is the longest repeated substring
+}
+
+
 int main(){
 	scanf("%s", T);
 	n = (int)strlen(T);
 	T[n++] = '$';
 	constructSA();
 	for(int i = 0; i < n; i++) printf("%2d\t%s\n", SA[i], T + SA[i]);
+	computeLCP();
+	for(int i = 0; i < n; i++) printf("%2d\t%s\n", LCP[i], T + SA[i]);
+
+	// Calculando maior substring em comum:
+	// scanf("%s", T);
+	// scanf("%s", T2);
+	// int n1 = (int)strlen(T);
+	// int n2 = (int)strlen(T2);
+	// T[n1++] = '#';
+	// T2[n2++] = '$';
+
+
 	return 0;
 }
