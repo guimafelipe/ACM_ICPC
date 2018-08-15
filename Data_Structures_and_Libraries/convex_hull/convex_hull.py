@@ -50,12 +50,9 @@ def convex_hull(points):
 
 	points[0], points[i_min] = points[i_min], points[0]
 
-	global p0
+	# global p0
 	p0 = points[0]
 	points = sorted(points, key=functools.cmp_to_key(compare))
-
-	for p in points:
-		print("(", p.x, ",", p.y, ")")
 
 	m = 1
 	for i in range(1, len(points)):
@@ -67,10 +64,7 @@ def convex_hull(points):
 
 	if m < 3: return
 
-	S = []
-	S.append(points[0])
-	S.append(points[1])
-	S.append(points[2])
+	S = [points[0], points[1], points[2]]
 
 	for i in range(3, m):
 		while orientation(next_to_top(S), S[-1], points[i]) != 2:
