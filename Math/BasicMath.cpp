@@ -1,7 +1,7 @@
 //Basic Math
 
 #include <bits/stdc++.h>
-
+//
 #define EPS 10e-6
 
 //v = vetor dos coeficiente an, an-1, an-2...
