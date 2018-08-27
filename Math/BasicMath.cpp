@@ -1,7 +1,7 @@
 //Basic Math
 
 #include <bits/stdc++.h>
-
+//
 #define EPS 10e-6
 
 //v = vetor dos coeficiente an, an-1, an-2...
@@ -118,7 +118,7 @@ public:
 	}
 };
 
-//----------------------------------------
+//-----------------------------------------
 typedef long long ll;
 typedef vector<int> vi;
 ll _sieve_size;
@@ -141,12 +141,54 @@ bool isPrime(ll N) { // a good enough deterministic prime tester
 	if (N % primes[i] == 0) return false;
 	return true; // it takes longer time if N is a large prime!
 } // note: only work for N <= (last prime in vi "primes")^2
+//------------------------------------------
+vi getPrimeFact(ll N) {
+	ll PF_idx = 0, PF = primes[PF_idx], ans = 0;
+	vi ans;
+	while (PF * PF <= N) {
+		while (N % PF == 0) { N /= PF; vi.pb(PF); }
+		PF = primes[++PF_idx];
+	}
+	if (N != 1) ans.pb(N);
+	return ans;
+}
+
+ll numDiv(ll N) {
+	ll PF_idx = 0, PF = primes[PF_idx], ans = 1; // start from ans = 1
+	while (PF * PF <= N) {
+		ll power = 0; // count the power
+		while (N % PF == 0) { N /= PF; power++; }
+		ans *= (power + 1); // according to the formula
+		PF = primes[++PF_idx];
+	}
+	if (N != 1) ans *= 2; // (last factor has pow = 1, we add 1 to it)
+return ans;
+}
 //-----------------------------------------
 int gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); }
 int lcm(int a, int b) { return a * (b / gcd(a, b)); }
-//-----------------------------------------
 
+//------------------------------------------
 
+ll EulerPhi(ll N) { //Pra um número
+	ll PF_idx = 0, PF = primes[PF_idx], ans = N; // start from ans = N
+	while (PF * PF <= N) {
+		if (N % PF == 0) ans -= ans / PF; // only count unique factor
+		while (N % PF == 0) N /= PF;
+			PF = primes[++PF_idx];
+	}
+	if (N != 1) ans -= ans / N; // last factor
+	return ans;
+}
 
+int EulerPhi[1000001]
+void PreProcessEulerPhi(){
+	EulerPhi
+	for (int i = 1; i <= 1000000; i++) EulerPhi[i] = i;
+	for (int i = 2; i <= 1000000; i++)
+		if (EulerPhi[i] == i) // i is a prime number
+			for (int j = i; j <= 1000000; j += i)
+				EulerPhi[j] = (EulerPhi[j] / i) * (i - 1);
+}
 
 
