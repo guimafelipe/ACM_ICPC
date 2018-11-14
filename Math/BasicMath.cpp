@@ -143,10 +143,10 @@ bool isPrime(ll N) { // a good enough deterministic prime tester
 } // note: only work for N <= (last prime in vi "primes")^2
 //------------------------------------------
 vi getPrimeFact(ll N) {
-	ll PF_idx = 0, PF = primes[PF_idx], ans = 0;
+	ll PF_idx = 0, PF = primes[PF_idx];
 	vi ans;
 	while (PF * PF <= N) {
-		while (N % PF == 0) { N /= PF; vi.pb(PF); }
+		while (N % PF == 0) { N /= PF; ans.pb(PF); }
 		PF = primes[++PF_idx];
 	}
 	if (N != 1) ans.pb(N);
