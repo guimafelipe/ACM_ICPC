@@ -4,7 +4,7 @@ using namespace std;
 
 // ***************************************************
 // gcd Greatest Common Divisor - diophantine equation
-// 最大公约数 - 丢番图方程
+// 最大公约数 		- 丢番图方程
 // ***************************************************
 
 int gcd(int a, int b, int &x, int &y) {
