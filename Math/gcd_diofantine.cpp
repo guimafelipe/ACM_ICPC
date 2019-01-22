@@ -39,8 +39,17 @@ int lcm(int a, int b) {
 }
 
 int main() {
-	printf("%d\n", GCD(6, 0));
-	printf("%d\n", GCD(0, 6));
-	printf("%d\n", lcm(6, 0));
-	printf("%d\n", lcm(0, 6));
+	int x;
+	int y;
+	int ans;
+
+	ans = gcd(6, 8, x, y);
+	printf("%d %d %d\n", ans, x, y);
+	
+	ans = gcd(8, 6, x, y);
+	printf("%d %d %d\n", ans, x, y);
+
+	// printf("%d\n", GCD(0, 6));
+	// printf("%d\n", lcm(6, 0));
+	// printf("%d\n", lcm(0, 6));
 }
