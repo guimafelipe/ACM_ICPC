@@ -13,6 +13,8 @@ using namespace std;
 #define nd second
 #define sz(v) int(v.size())
 #define all(X) (X).begin(), (X).end()
+#define FOR(I, A, B) for(int (I) = (A); (I) < (B); (I)++);
+#define RFOR(I, A, B) for(int (I) = (A); (I) >= (B); (I)--);
 
 typedef long long ll;
 typedef pair<int,int> ii;
