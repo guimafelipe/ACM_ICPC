@@ -1,3 +1,5 @@
+// test if a set can be partitioned in 2 with same sum
+
 #include <bits/stdc++.h>
 
 using namespace std;
