@@ -70,3 +70,49 @@ int spanningTree(int V,int E,vector<vector<int> > graph)
     
     return sum(parent, graph);
 }
+
+/* variation using priority_queue with graph stored as adjacency lists
+int Solution::solve(int A, vector<vector<int> > &B) {
+    vector< vector< pair<int, int> > > graph(A, vector< pair<int, int> >());
+    for (int i = 0; i < B.size(); i++) {
+        int u = B[i][0] - 1;
+        int v = B[i][1] - 1;
+        int w = B[i][2];
+        graph[u].push_back(make_pair(v, w));
+        graph[v].push_back(make_pair(u, w));
+    }
+    
+    vector<bool> in_mst(A, false);
+    vector<int> value(A, INT_MAX);
+    
+    priority_queue< pair<int, int> > pq;
+    
+    pq.push(make_pair(0, 0));
+
+    while ( !pq.empty() ) {
+        auto curr = pq.top();
+        pq.pop();
+        int curr_w = -curr.first;
+        int u = curr.second;
+        
+        in_mst[u] = true;
+        value[u] = min(value[u], curr_w);
+        
+        for (int i = 0; i < graph[u].size(); i++) {
+            int v = graph[u][i].first;
+            int w = graph[u][i].second;
+            
+            if ( !in_mst[v] && w < value[v]) {
+                value[v] = w;
+                pq.push(make_pair(-w, v));
+            }
+        }
+    }
+    
+    int ans = 0;
+    for (int i = 0; i < value.size(); i++)
+        ans += value[i];
+        
+    return ans;
+}
+*/
