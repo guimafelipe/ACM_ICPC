@@ -129,55 +129,89 @@ void sieve(ll upperbound) {
 	_sieve_size = upperbound + 1;
 	bs.set();
 	bs[0] = bs[1] = 0;
-	for (ll i = 2; i <= _sieve_size; i++) if (bs[i]) {
-		for (ll j = i * i; j <= _sieve_size; j += i) bs[j] = 0;
-		primes.push_back((int)i);
+	for (ll i = 2; i <= _sieve_size; i++){
+		if (bs[i]) {
+			for (ll j = i * i; j <= _sieve_size; j += i){
+				bs[j] = 0;
+			}
+			primes.push_back((int)i);
+		}
 	} 
 }
 
-bool isPrime(ll N) { // a good enough deterministic prime tester
-	if (N <= _sieve_size) return bs[N]; // O(1) for small primes
-	for (int i = 0; i < (int)primes.size(); i++)
-	if (N % primes[i] == 0) return false;
+ll _sieve_size;
+vi lp;
+vi primes;
+
+void euler_sieve(ll upperbound){
+	_sieve_size = upperbound+1;
+	lp.assign(_sieve_size, 0);
+	for(int i = 2; i < _sieve_size; ++i){
+		if(lp[i] == 0){
+			lp[i] = i;
+			primes.pb(i);
+		} 
+		for(int j = 0; j < primes.size() && primes[j] <= lp[i] && i*primes[j] < _sieve_size; ++j){
+			lp[i*primes[j]] = primes[j];
+		}
+	}
+}
+
+bool isPrime(ll n) { // a good enough deterministic prime tester
+	if (n <= _sieve_size) return bs[n]; // O(1) for small primes
+
+	for (int i = 0; i < (int)primes.size(); i++){
+		if (n % primes[i] == 0) return false;
+	}
 	return true; // it takes longer time if N is a large prime!
 } // note: only work for N <= (last prime in vi "primes")^2
 //------------------------------------------
-vi getPrimeFact(ll N) {
-	ll PF_idx = 0, PF = primes[PF_idx];
+
+
+vi getPrimeFact(ll n) {
+	ll ind = 0, pf = primes[0];
 	vi ans;
-	while (PF * PF <= N) {
-		while (N % PF == 0) { N /= PF; ans.pb(PF); }
-		PF = primes[++PF_idx];
+	while (pf*pf <= n) {
+		while (n % pf == 0) {
+			n /= pf;
+			ans.pb(PF); 
+		}
+		pf = primes[++ind];
 	}
-	if (N != 1) ans.pb(N);
+	if (n != 1) ans.pb(n);
 	return ans;
 }
 
-ll numDiv(ll N) {
-	ll PF_idx = 0, PF = primes[PF_idx], ans = 1; // start from ans = 1
-	while (PF * PF <= N) {
+ll numDiv(ll n) {
+	ll ind = 0, pf = primes[0], ans = 1; // start from ans = 1
+	while (pf*pf <= n) {
 		ll power = 0; // count the power
-		while (N % PF == 0) { N /= PF; power++; }
+		while (n % pf == 0) {
+			n /= pf;
+			power++; 
+		}
 		ans *= (power + 1); // according to the formula
-		PF = primes[++PF_idx];
+		pf = primes[++ind];
 	}
-	if (N != 1) ans *= 2; // (last factor has pow = 1, we add 1 to it)
-return ans;
+	if (n != 1) ans *= 2; // (last factor has pow = 1, we add 1 to it)
+	return ans;
 }
+
+
 //-----------------------------------------
-int gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); }
-int lcm(int a, int b) { return a * (b / gcd(a, b)); }
+ll gcd(ll a, ll b) { return b == 0 ? a : gcd(b, a % b); }
+ll lcm(ll a, ll b) { return a * (b / gcd(a, b)); }
 
 //------------------------------------------
 
 ll EulerPhi(ll N) { //Pra um número
-	ll PF_idx = 0, PF = primes[PF_idx], ans = N; // start from ans = N
-	while (PF * PF <= N) {
-		if (N % PF == 0) ans -= ans / PF; // only count unique factor
-		while (N % PF == 0) N /= PF;
-			PF = primes[++PF_idx];
+	ll ind = 0, pf = primes[0], ans = n; // start from ans = N
+	while (pf*pf <= n) {
+		if (n % pf == 0) ans -= ans / pf; // only count unique factor
+		while (n % pf == 0) n /= pf;
+			pf = primes[++ind];
 	}
-	if (N != 1) ans -= ans / N; // last factor
+	if (n != 1) ans -= ans / n; // last factor
 	return ans;
 }
 
