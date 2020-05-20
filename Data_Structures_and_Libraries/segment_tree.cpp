@@ -9,7 +9,7 @@ int comp(int a, int b){
 
 class SegmentTree{
 	private:
-		vector<int> tree, lazy;
+		vector<int> tree;
 		int n;
 
 		void build(int p, int l, int r, vector<int>& arr){
@@ -23,32 +23,20 @@ class SegmentTree{
 			tree[p] = comp(tree[2*p], tree[2*p+1]);
 		}
 
-		void push(int p, int l, int r){
-			tree[p] += (r - l + 1)*lazy[p]; // RSQ
-			// tree[p] += lazy[p]; // RMQ
-			if(l != r){
-				lazy[2*p] += lazy[p];
-				lazy[2*p+1] += lazy[p];
-			}
-			lazy[p] = 0;
-		}
-
-		void update(int p, int l, int r, int a, int b, int k){
-			push(p, l, r);
-			if(a > r || b < l) return;
-			if(a <= l && b >= r){
-				lazy[p] = k;
-				push(p, l, r);
+		void update(int p, int l, int r, int i, int k){
+			if(i > r || i < l) return;
+			if(l == r){
+				//tree[p] += k;
+				tree[p] = k;
 				return;
 			}
 			int m = (l+r)/2;
-			update(2*p, l, m, a, b, k);
-			update(2*p+1, m+1, r, a, b, k);
+			update(2*p, l, m, i, k);
+			update(2*p+1, m+1, r, i, k);
 			tree[p] = comp(tree[2*p], tree[2*p+1]);
 		}
 
 		int query(int p, int l, int r, int a, int b){
-			push(p, l, r);
 			if(b < l || a > r) return NEUTRAL;
 			if(a <= l && b >= r) return tree[p];
 			int m = (l+r)/2;
@@ -59,7 +47,6 @@ class SegmentTree{
 		SegmentTree(vector<int> arr){
 			n = arr.size();
 			tree.assign(4*n, NEUTRAL);
-			lazy.assign(4*n, 0);
 			build(1, 0, n-1, arr);
 		}
 
@@ -67,8 +54,8 @@ class SegmentTree{
 			return query(1, 0, n-1, a, b);
 		}
 
-		void update(int a, int b, int k){
-			update(1, 0, n-1, a, b, k);
+		void update(int i, int k){
+			update(1, 0, n-1, i, k);
 		}
 };
 
@@ -90,7 +77,7 @@ int main(){
 	SegmentTree st(test);
 	cout << st.query(1, 4) << endl;
 	cout << st.query(3, 7) << endl;
-	st.update(3, 7, 1);
+	st.update(6, 1);
 	cout << st.query(3, 7) << endl;
 	return 0;
 }
