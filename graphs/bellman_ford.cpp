@@ -8,21 +8,22 @@ public:
     Edge(int _u, int _v, int _w) {u = _u; v = _v; w = _w;}
 };
 
-bool bellman_ford(vector<Edge> &g, int V, int src) {
-    vector<int> dist(V, INT_MAX);
+// Retorna se tem ou não ciclo
+bool bellman_ford(vector<Edge> &edges, int n, int src) {
+    vector<int> dist(n, INT_MAX);
     dist[src] = 0;
     
-    for (int v = 0; v < V - 1; v++)
-        for (int i = 0; i < g.size(); i++) {
-            Edge e = g[i];
+    for (int j = 0; j < n - 1; j++)
+        for (int i = 0; i < edges.size(); i++) {
+            Edge e = edges[i];
             int u = e.u, v = e.v, w = e.w;
             
             if (dist[u] != INT_MAX && dist[u] + w < dist[v])
                 dist[v] = dist[u] + w;
         }
     
-    for (int i = 0; i < g.size(); i++) {
-            Edge e = g[i];
+    for (int i = 0; i < edges.size(); i++) {
+            Edge e = edges[i];
             int u = e.u, v = e.v, w = e.w;
             
             if (dist[u] != INT_MAX && dist[u] + w < dist[v])
@@ -38,17 +39,17 @@ int main() {
 	cin >> T;
 	
 	for (int t = 0; t < T; t++) {
-	    int V, e;
-	    cin >> V >> e;
+	    int n, m;
+	    cin >> n >> m;
 	    
-	    vector<Edge> g;
-	    for (int i = 0; i < e; i++) {
+	    vector<Edge> edges;
+	    for (int i = 0; i < m; i++) {
 	        int u, v, w;
 	        cin >> u >> v >> w;
-	        g.push_back(Edge(u, v, w));
+	        edges.push_back(Edge(u, v, w));
 	    }
 	    
-	    cout << bellman_ford(g, V, 0) << endl;
+	    cout << bellman_ford(edges, n, 0) << endl;
 	}
 	
 	return 0;
