@@ -4,8 +4,11 @@ using namespace std;
 #define MAXN 10000
 
 vector<int> grafo[MAXN];
-vector<int> par;
+vector<int> parv, paru;
 vector<bool> vis;
+
+vector<bool> zu, zv;
+vector<int> coveru, coverv;
 
 bool kuhn(int u){
 	if(vis[u]) return false;
@@ -14,8 +17,8 @@ bool kuhn(int u){
 
 	for(int v : grafo[u]){
 		// se o v nao tem par ou se encontrei um augmented path
-		if(par[v] == -1 || kuhn(par[v])) {
-			par[v] = u;
+		if(parv[v] == -1 || kuhn(parv[v])) {
+			parv[v] = u;
 			return true;
 		}
 	}
@@ -23,19 +26,15 @@ bool kuhn(int u){
 	return false;
 }
 
-vector<int> ladoA, ladoB;
 
-void bipart(int u, int color){
-	vis[u] = true;
-	if(color == 0){
-		ladoA.push_back(u);
-	} else {
-		ladoB.push_back(u);
-	}
+void reach(int u){
+	if(u == -1 || zu[u]) return;
+	zu[u] = true;
 	for(int v : grafo[u]){
-		if(vis[v]) continue;
+		if(parv[v] == u) continue;
 
-		bipart(v, !color);
+		zv[v] = true;
+		reach(parv[v]);
 	}
 }
 
@@ -43,49 +42,70 @@ int main(){
 	int n, m;
 	cin >> n >> m;
 
-	for(int i = 0; i < m; i++){
-		int a, b;
-		cin >> a >> b;
-		grafo[a].push_back(b);
-	}
-
-	vis.assign(n, false);
-
 	for(int i = 0; i < n; i++){
-		if(!vis[i]) bipart(i, 0);
+		grafo[i].clear();
+		for(int j = 0; j < m; j++){
+			int p;
+			cin >> p;
+			if(p == 1){
+				grafo[i].push_back(j);
+			}
+		}
 	}
 
-	par.assign(n, -1);
-
-	int asz = ladoA.size();
-	int bsz = ladoB.size();
-
-	for(int i = 0; i < asz; i++){
+	parv.assign(m, -1);
+	for(int u = 0; u < n; u++){
 		vis.assign(n, false);
-		kuhn(ladoA[i]);
+		kuhn(u);
 	}
 
-	int pares = 0;
-	for(int i = 0; i < bsz; i++){
-		if(par[ladoB[i]] != -1) pares++;
+	int pairs = 0;
+	paru.assign(n, -1);
+	for(int v = 0; v < m; v++){
+		if(parv[v] != -1){
+			paru[parv[v]] = v;
+			pairs++;
+		}
 	}
 
-	cout << pares << endl;
+	cout << pairs << endl;
+
+	zu.assign(n, false);
+	zv.assign(n, false);
+
+	for(int u = 0; u < n; u++){
+		if(paru[u] == -1){
+			reach(u);
+		}
+	}
+
+	for(int u = 0; u < n; u++){
+		if(!zu[u]){
+			coveru.push_back(u);
+			cout << u << " ";
+		}
+	}
+	cout << endl;
+
+	for(int v = 0; v < m; v++){
+		if(zv[v]){
+			coverv.push_back(v);
+			cout << v << " ";
+		}
+	}
+	cout << endl;
 
 	return 0;
 }
 
 /*
-6 9
-0 1
-0 3
-3 0
-2 3
-3 2
-4 2
-5 4
+
+in:
 4 5
-3 5
+1 1 0 0 0
+0 0 1 1 1
+0 0 1 0 0
+0 0 1 0 0
 
 */
 
